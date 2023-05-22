@@ -49,21 +49,4 @@ export const ProductDetails = styled("div", {
     lineHeight: 1.6,
     color: "$grey300",
   },
-
-  button: {
-    marginTop: "auto",
-    backgroundColor: "$primary",
-    border: 0,
-    color: "$white",
-    borderRadius: 8,
-    padding: "1.25rem",
-    cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "$md",
-    transition: "all .2s",
-
-    "&:hover": {
-      backgroundColor: "$primaryLight",
-    },
-  },
 });
