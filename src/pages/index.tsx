@@ -1,6 +1,8 @@
 import Image from "next/image"
 import { HomeContainer, Product } from "../styles/pages/home"
 
+import Head from 'next/head';
+
 import { useKeenSlider } from 'keen-slider/react'
 import { stripe } from "../lib/stripe";
 import { GetStaticProps } from "next";
@@ -31,26 +33,32 @@ export default function Home(props: HomeProps) {
   })
 
   return (
+    <>
+      <Head>
+        <title>Home - The next store</title>
+      </Head>
+      <HomeContainer ref={sliderRef} className="keen-slider">
 
-    <HomeContainer ref={sliderRef} className="keen-slider">
-      {props.products.map((product) => (
-        <Link
-          href={`/product/${product.id}`}
-          key={product.id}>
-          <Product
-            className="keen-slider__slide" >
-            <Image src={product.imageUrl} width={520} height={480} alt="camisa" />
 
-            <footer>
-              <strong>{product.name}</strong>
-              <span>{product.price}</span>
-            </footer>
-          </Product>
-        </Link>
-      ))
-      }
-    </HomeContainer >
+        {props.products.map((product) => (
+          <Link
+            href={`/product/${product.id}`}
+            key={product.id}
+            prefetch={false}>
+            <Product
+              className="keen-slider__slide" >
+              <Image src={product.imageUrl} width={520} height={480} alt="camisa" />
 
+              <footer>
+                <strong>{product.name}</strong>
+                <span>{product.price}</span>
+              </footer>
+            </Product>
+          </Link>
+        ))
+        }
+      </HomeContainer >
+    </>
   )
 }
 
@@ -71,7 +79,7 @@ export const getStaticProps: GetStaticProps = async () => {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: priceFormatted
+      price: priceFormatted,
     }
   })
 

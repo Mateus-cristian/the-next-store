@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
     "@stitches/react": "^1.2.8",
+    "@types/react-redux": "^7.1.25",
+    "axios": "^1.4.0",
     "keen-slider": "^6.8.5",
     "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.8.0",
+    "react-redux": "^8.0.5",
     "stripe": "^12.5.0"
   },
   "devDependencies": {

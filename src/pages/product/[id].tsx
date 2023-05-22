@@ -4,6 +4,11 @@ import { stripe } from "../../lib/stripe";
 import Stripe from "stripe";
 import { formattedPrice } from "../../utils/utils";
 import Image from "next/image"
+import { useRouter } from "next/router";
+import axios from "axios";
+import { useState } from "react";
+import Head from "next/head";
+import NsButton from "../../components/NsButton";
 
 interface ProductsProps {
     product: {
@@ -12,28 +17,57 @@ interface ProductsProps {
         imageUrl: string;
         price: string;
         description: string,
+        defaultPriceId: string
     }
 }
 
 export default function Product({ product }: ProductsProps) {
+    const { isFallback } = useRouter();
+
+    const [inCheckout, setInCheckout] = useState(false);
+
+    async function handlerBuyPoduct() {
+        try {
+            setInCheckout(true);
+            const response = await axios.post('/api/checkout', {
+                priceId: product.defaultPriceId,
+            })
+
+            const { checkoutUrl } = response.data;
+
+            window.location.href = checkoutUrl;
+        } catch (err) {
+            setInCheckout(false)
+            alert("xiii deu erro");
+        }
+    }
+
+    if (isFallback) {
+        return <p>Carregando</p>
+    }
 
     return (
-        <ProductContainer>
-            <ImageContainer>
-                <Image src={product.imageUrl} width={520} height={480} alt="camisa" />
-            </ImageContainer>
+        <>
+            <Head>
+                <title>{product.name}</title>
+            </Head>
+            <ProductContainer >
+                <ImageContainer>
+                    <Image src={product.imageUrl} width={520} height={480} alt="camisa" />
+                </ImageContainer>
 
-            <ProductDetails>
-                <h1>{product.name}</h1>
-                <span>{product.price}</span>
+                <ProductDetails>
+                    <h1>{product.name}</h1>
+                    <span>{product.price}</span>
 
-                <p>{product.description}</p>
+                    <p>{product.description}</p>
 
-                <button>
-                    Comprar agora
-                </button>
-            </ProductDetails>
-        </ProductContainer>
+                    <NsButton disabled={inCheckout} handlerPoduct={handlerBuyPoduct} title="Adicionar ao carrinho" />
+
+
+                </ProductDetails>
+            </ProductContainer>
+        </>
     )
 }
 
@@ -42,7 +76,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         paths: [
             { params: { id: 'prod_NuNWpdoBVlBOgl' } },
         ],
-        fallback: false,
+        fallback: true,
     }
 
 }
@@ -65,7 +99,8 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
                 name: product.name,
                 imageUrl: product.images[0],
                 price: priceFormatted,
-                description: product.description
+                description: product.description,
+                defaultPriceId: price.id
             }
         },
         revalidate: 60 * 60 * 1, //1 hour
