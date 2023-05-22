@@ -1,20 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "./store";
+import { createAction, createSlice } from "@reduxjs/toolkit";
+import { ProductCart, ProductCartArray } from "./styles";
+
+const PREFIX = 'app/cart';
 
 const initialState = {
-  name: "",
-  description: "",
-  price: "",
-  imageUrl: "",
-};
+    product:[
+    {
+        name: "",
+        description: "",
+        price: "",
+        quantity:0, 
+        imageUrl: "",
+    }]
+}
 
-export const cartSlicer = createSlice({
-  name: "cart",
+
+export const addProductToCart = createAction<ProductCart>(`${PREFIX}/addProductToCart`);
+
+
+export const cartSlice = createSlice({
+  name:  PREFIX,
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {},
+  extraReducers(builder) {
+    // Acrescenta o produto ao carrinho
+    builder.addCase(addProductToCart, ({ product }, { payload }) => {
+      console.log(payload);
+
+        });
+    }
 });
 
-export const {} = cartSlicer.actions;
-export default cartSlicer.reducer;
+export default cartSlice.reducer;
