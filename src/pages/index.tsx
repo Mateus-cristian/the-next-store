@@ -19,7 +19,7 @@ interface HomeProps {
     id: string;
     name: string;
     imageUrl: string;
-    price: string;
+    priceFormatted: string;
   }[]
 }
 
@@ -51,7 +51,7 @@ export default function Home(props: HomeProps) {
 
               <footer>
                 <strong>{product.name}</strong>
-                <span>{product.price}</span>
+                <span>{product.priceFormatted}</span>
               </footer>
             </Product>
           </Link>
@@ -79,7 +79,8 @@ export const getStaticProps: GetStaticProps = async () => {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: priceFormatted,
+      priceFormatted: priceFormatted,
+      price: price
     }
   })
 

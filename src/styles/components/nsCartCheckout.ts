@@ -54,7 +54,7 @@ export const ProductCart = styled("div", {
     padding: "0.25rem 0",
     display: "flex",
     flexDirection: "column",
-    gap: "0.5rem",
+    gap: "0.2rem",
 
     "& p": {
       fontSize: "$md",
@@ -72,8 +72,18 @@ export const ProductCart = styled("div", {
       alignItems: "flex-end",
       fontSize: "$md",
       fontWeight: "bold",
-      marginBottom: "0.5rem",
+
       cursor: "pointer",
+    },
+  },
+
+  "& .quantityProduct": {
+    display: "flex",
+    alignItems: "end",
+
+    "& p": {
+      position: "relative",
+      top: "2px",
     },
   },
 });

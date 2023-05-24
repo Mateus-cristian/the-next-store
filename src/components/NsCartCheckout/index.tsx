@@ -1,12 +1,14 @@
 import Image from "next/image";
 import { BodyCart, ConstainerConfirmSale, ContainerCart, ContainerProducts, ImageCartContainer, ProductCart } from "../../styles/components/nsCartCheckout";
-
-
-import shirt1 from '../../assets/shirt1.png';
-import shirt2 from '../../assets/shirt2.png';
-import shirt3 from '../../assets/shirt3.png';
 import NsButton from "../NsButton";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { IRootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { addProductToCart, decreaseProductToCart, increaseProductToCart, removeProductToCart } from "../../store/cartSlice";
+import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md'
+import { formattedPrice } from "../../utils/utils";
+import { StoreProps } from "../../store/types";
+
 
 interface CheckoutProps {
     open: boolean;
@@ -14,6 +16,12 @@ interface CheckoutProps {
 }
 
 export default function NsCartCheckout({ open, setToggleModal }: CheckoutProps) {
+
+    const { products, valueTotal, quantity } = useSelector<IRootState, StoreProps>(x => x.cart);
+
+    const dispatch = useDispatch();
+
+
     return (
         <ContainerCart style={{ right: `${open ? '0' : '-540px'}` }}>
             <BodyCart>
@@ -23,75 +31,33 @@ export default function NsCartCheckout({ open, setToggleModal }: CheckoutProps) 
                     <span className="titleCart">Sacola de compras:</span>
 
                     <ContainerProducts>
-                        <ProductCart>
-                            <ImageCartContainer>
-                                <Image src={shirt1.src} width={101} height={93} alt="" />
-                            </ImageCartContainer>
+                        {products.map((product) => (
+                            <ProductCart key={product.id}>
+                                <ImageCartContainer>
+                                    <Image src={product.imageUrl} width={101} height={93} alt="" />
+                                </ImageCartContainer>
 
-                            <div className="descriptionProduct">
-                                <p>Camisa x1</p>
-                                <strong>R$ 79,99</strong>
+                                <div className="descriptionProduct">
+                                    <p>{product.name}</p>
+                                    <strong>{formattedPrice(product.price)}</strong>
+                                    <div className="quantityProduct">
+                                        <strong style={{ marginRight: 5 }}>Quantidade:</strong>
+                                        <p ><MdArrowBackIosNew
+                                            onClick={() => dispatch(decreaseProductToCart(product))}
+                                            style={{ cursor: 'pointer' }}
+                                        /> </p>
+                                        <strong>{product.quantity}</strong>
+                                        <p ><MdArrowForwardIos
+                                            onClick={() => dispatch(increaseProductToCart(product))}
+                                            style={{ cursor: 'pointer' }}
+                                        /></p>
+                                    </div>
 
-                                <span>Remover</span>
-                            </div>
+                                    <span onClick={() => dispatch(removeProductToCart(product))}>Remover</span>
+                                </div>
 
-                        </ProductCart>
-
-                        <ProductCart>
-                            <ImageCartContainer>
-                                <Image src={shirt2.src} width={101} height={93} alt="" />
-                            </ImageCartContainer>
-
-                            <div className="descriptionProduct">
-                                <p>Camisa x2</p>
-                                <strong>R$ 89,99</strong>
-
-                                <span>Remover</span>
-                            </div>
-
-                        </ProductCart>
-
-                        <ProductCart>
-                            <ImageCartContainer>
-                                <Image src={shirt3.src} width={101} height={93} alt="" />
-                            </ImageCartContainer>
-
-                            <div className="descriptionProduct">
-                                <p>Camisa x3</p>
-                                <strong>R$ 99,99</strong>
-
-                                <span>Remover</span>
-                            </div>
-
-                        </ProductCart>
-
-                        <ProductCart>
-                            <ImageCartContainer>
-                                <Image src={shirt3.src} width={101} height={93} alt="" />
-                            </ImageCartContainer>
-
-                            <div className="descriptionProduct">
-                                <p>Camisa x3</p>
-                                <strong>R$ 99,99</strong>
-
-                                <span>Remover</span>
-                            </div>
-
-                        </ProductCart>
-
-                        <ProductCart>
-                            <ImageCartContainer>
-                                <Image src={shirt3.src} width={101} height={93} alt="" />
-                            </ImageCartContainer>
-
-                            <div className="descriptionProduct">
-                                <p>Camisa x3</p>
-                                <strong>R$ 99,99</strong>
-
-                                <span>Remover</span>
-                            </div>
-
-                        </ProductCart>
+                            </ProductCart>
+                        ))}
                     </ContainerProducts>
 
                 </div>
@@ -100,12 +66,12 @@ export default function NsCartCheckout({ open, setToggleModal }: CheckoutProps) 
 
                         <div className="descriptionFooter">
                             <span>Quantidade</span>
-                            <span>3 itens</span>
+                            <span>{quantity} itens</span>
                         </div>
 
                         <div className="descriptionFooterValue">
                             <p>Valor Total</p>
-                            <span>R$ 270,00</span>
+                            <span>{formattedPrice(valueTotal)}</span>
                         </div>
 
                         <NsButton title="Finalizar compra" />

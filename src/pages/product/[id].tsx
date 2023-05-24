@@ -2,13 +2,18 @@ import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/p
 import { GetStaticPaths, GetStaticProps } from "next";
 import { stripe } from "../../lib/stripe";
 import Stripe from "stripe";
-import { formattedPrice } from "../../utils/utils";
+import { formattedPrice, priceStringToDecimal } from "../../utils/utils";
 import Image from "next/image"
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useState } from "react";
 import Head from "next/head";
 import NsButton from "../../components/NsButton";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../store/store";
+import { ProductCartArray } from "../../store/types";
+import { addProductToCart } from "../../store/cartSlice";
 
 interface ProductsProps {
     product: {
@@ -17,12 +22,17 @@ interface ProductsProps {
         imageUrl: string;
         price: string;
         description: string,
-        defaultPriceId: string
+        defaultPriceId?: string
     }
 }
 
 export default function Product({ product }: ProductsProps) {
     const { isFallback } = useRouter();
+
+    const dispatch = useDispatch();
+
+    // para retornar os produtos
+    // const { products } = useSelector<IRootState, ProductCartArray>(x => x.cart);
 
     const [inCheckout, setInCheckout] = useState(false);
 
@@ -40,6 +50,23 @@ export default function Product({ product }: ProductsProps) {
             setInCheckout(false)
             alert("xiii deu erro");
         }
+    }
+
+    const addProductToCartCheckout = (product: ProductsProps) => {
+        const { id, description, name, imageUrl, price } = product.product;
+
+        const priceFormatted = priceStringToDecimal(price);
+
+        const productFormatted = {
+            id: id,
+            name: name,
+            imageUrl: imageUrl,
+            price: priceFormatted,
+            description: description,
+            quantity: 1
+        }
+
+        dispatch(addProductToCart(productFormatted));
     }
 
     if (isFallback) {
@@ -62,8 +89,7 @@ export default function Product({ product }: ProductsProps) {
 
                     <p>{product.description}</p>
 
-                    <NsButton disabled={inCheckout} handlerPoduct={handlerBuyPoduct} title="Adicionar ao carrinho" />
-
+                    <NsButton disabled={inCheckout} handlerPoduct={() => addProductToCartCheckout({ product })} title="Adicionar ao carrinho" />
 
                 </ProductDetails>
             </ProductContainer>
