@@ -1,15 +1,15 @@
 import { AppProps } from "next/app";
 import { useState } from 'react';
 import { globalStyles } from "../styles/global";
-import { HiOutlineShoppingBag } from 'react-icons/hi'
-
-import logoImg from '../assets/Logo.svg'
-import { Container, Header } from "../styles/pages/app";
+import { Container } from "../styles/pages/app";
 import NsCartCheckout from "../components/NsCartCheckout";
-import store, { persistor } from "../store/store";
+import store, { IRootState, persistor } from "../store/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import Link from "next/link";
+
+import { useSelector } from "react-redux";
+import { ProductCartArray } from "../store/types";
+import NsHeader from "../components/NsHeader";
 
 globalStyles()
 
@@ -22,22 +22,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <PersistGate persistor={persistor}>
         <div>
           <Container style={{ position: 'relative' }}>
-            <Header>
-              <Link href="/">
-                <img src={logoImg.src} alt='' style={{ cursor: "pointer" }} />
-              </Link>
-              <div className="containerCart" onClick={() => setToggleModal(!toggleModal)}>
-                <div className="containerIconCart">
-                  <HiOutlineShoppingBag size={24} className="iconCart" />
-                </div>
-                <span>1</span>
-              </div>
-            </Header>
-
-
-
+            <NsHeader toggleModal={toggleModal} setToggleModal={setToggleModal} />
             <NsCartCheckout open={toggleModal} setToggleModal={setToggleModal} />
-
 
             <Component {...pageProps} />
           </Container>
