@@ -18,8 +18,9 @@ export const {
       gray300: "#c4c4cc",
       gray100: "#e1e1e6",
 
-      primary: "#00875f",
-      primaryLight: "#00b37e",
+      primary: "#5c56c3",
+      primaryLight: "#e6c94c",
+      secondary: "#CEAE24",
     },
 
     fontSizes: {
