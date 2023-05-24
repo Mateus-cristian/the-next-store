@@ -10,6 +10,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { useSelector } from "react-redux";
 import { ProductCartArray } from "../store/types";
 import NsHeader from "../components/NsHeader";
+import { useRouter } from "next/router";
 
 globalStyles()
 
@@ -17,14 +18,19 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const [toggleModal, setToggleModal] = useState(false);
 
+  const { pathname } = useRouter();
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <div>
           <Container style={{ position: 'relative' }}>
-            <NsHeader toggleModal={toggleModal} setToggleModal={setToggleModal} />
-            <NsCartCheckout open={toggleModal} setToggleModal={setToggleModal} />
-
+            {pathname !== '/login' && (
+              <>
+                <NsHeader toggleModal={toggleModal} setToggleModal={setToggleModal} />
+                <NsCartCheckout open={toggleModal} setToggleModal={setToggleModal} />
+              </>
+            )}
             <Component {...pageProps} />
           </Container>
         </div>
