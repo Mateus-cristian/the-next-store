@@ -26,16 +26,16 @@ export const decreaseProductToCart = createAction<ProductCart>(
 );
 
 const sumTotalProducts = (arrayProducts: ProductCart[]) => {
-  const sumTotal = arrayProducts.reduce((acc, price) => {
-    return (acc += price.price);
+  const sumTotal = arrayProducts.reduce((acc, product) => {
+    return (acc += product.price);
   }, 0);
 
   return sumTotal;
 };
 
 const sumTotalProductsQuantity = (arrayProducts: ProductCart[]) => {
-  const sumTotal = arrayProducts.reduce((acc, price) => {
-    return (acc += price.quantity);
+  const sumTotal = arrayProducts.reduce((acc, product) => {
+    return (acc += product.quantity);
   }, 0);
 
   return sumTotal;
@@ -43,7 +43,6 @@ const sumTotalProductsQuantity = (arrayProducts: ProductCart[]) => {
 
 export const cartSlice = createSlice({
   name: PREFIX,
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {},
   extraReducers(builder) {
@@ -92,12 +91,10 @@ export const cartSlice = createSlice({
 
     // decremeta o produto
     builder.addCase(decreaseProductToCart, (action, { payload }) => {
-      let copyArrayWithoutProduct = action.products.filter(
-        (product) => product.id !== payload.id
-      );
+      let arrayProducts = action.products;
 
       if (payload.quantity === 1) {
-        action.products = copyArrayWithoutProduct;
+        action.products = arrayProducts;
         action.valueTotal = sumTotalProducts(action.products);
         action.quantity = sumTotalProductsQuantity(action.products);
         return;
@@ -105,34 +102,44 @@ export const cartSlice = createSlice({
 
       const pricePerProduct = payload.price / payload.quantity;
 
-      copyArrayWithoutProduct.push({
-        ...payload,
-        price: payload.price - pricePerProduct,
-        quantity: payload.quantity - 1,
+      action.products = arrayProducts.map((product) => {
+        if (product.id === payload.id) {
+          return {
+            ...product,
+            price: payload.price - pricePerProduct,
+            quantity: payload.quantity - 1,
+          };
+        }
+        return product;
       });
 
-      action.valueTotal = sumTotalProducts(copyArrayWithoutProduct);
-      action.quantity = sumTotalProductsQuantity(copyArrayWithoutProduct);
-      action.products = copyArrayWithoutProduct;
+      const products = action.products;
+      console.log(products);
+      action.valueTotal = sumTotalProducts(products);
+      action.quantity = sumTotalProductsQuantity(products);
     });
 
     // acrescenta o produto
     builder.addCase(increaseProductToCart, (action, { payload }) => {
-      let copyArrayWithoutProduct = action.products.filter(
-        (product) => product.id !== payload.id
-      );
+      let arrayProducts = action.products;
 
       const pricePerProduct = payload.price / payload.quantity;
 
-      copyArrayWithoutProduct.push({
-        ...payload,
-        price: payload.price + pricePerProduct,
-        quantity: payload.quantity + 1,
+      action.products = arrayProducts.map((product) => {
+        if (product.id === payload.id) {
+          return {
+            ...product,
+            price: payload.price + pricePerProduct,
+            quantity: payload.quantity + 1,
+          };
+        }
+        return product;
       });
 
-      action.valueTotal = sumTotalProducts(copyArrayWithoutProduct);
-      action.quantity = sumTotalProductsQuantity(copyArrayWithoutProduct);
-      action.products = copyArrayWithoutProduct;
+      const products = action.products;
+      console.log(products);
+      action.valueTotal = sumTotalProducts(products);
+      action.quantity = sumTotalProductsQuantity(products);
     });
   },
 });
