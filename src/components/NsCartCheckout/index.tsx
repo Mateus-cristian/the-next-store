@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BodyCart, ConstainerConfirmSale, ContainerCart, ContainerProducts, ImageCartContainer, ProductCart } from "../../styles/components/nsCartCheckout";
-import NsButton from "../NsButton";
+import NsButton from "../Button/NsButton";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IRootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
