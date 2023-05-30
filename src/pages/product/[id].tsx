@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { useState } from "react";
 import Head from "next/head";
-import NsButton from "../../components/NsButton";
+import NsButton from "../../components/Button/NsButton";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../store/store";
