@@ -8,6 +8,7 @@ import { IRootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 
 import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/router';
 
 
 interface PropsHeader {
@@ -16,7 +17,6 @@ interface PropsHeader {
 }
 
 export default function NsHeader({ setToggleModal, toggleModal }: PropsHeader) {
-
 
 
     const { products } = useSelector<IRootState, ProductCartArray>(x => x.cart);
@@ -37,7 +37,9 @@ export default function NsHeader({ setToggleModal, toggleModal }: PropsHeader) {
                 </div>
                 <div className="containerCart" >
                     <div className="containerIconCart">
-                        <HiLogout size={24} className="iconCart" onClick={() => signOut()} />
+                        <HiLogout size={24} className="iconCart" onClick={() => {
+                            signOut()
+                        }} />
                     </div>
                 </div>
             </div>

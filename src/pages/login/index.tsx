@@ -11,17 +11,22 @@ import NsButtonSignGoogle from '../../components/Button/NsButtonSignGoogle'
 export default function Login() {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
-
     const router = useRouter();
 
     useEffect(() => {
         setLoading(true);
+
         if (session) {
             router.replace('/');
+            setLoading(false);
+            return;
         }
         setLoading(false);
     }, [session])
 
+    if (loading) {
+        return <p style={{ height: '100vh', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>Carregando...</p>
+    }
 
     return (
         <>
@@ -34,7 +39,6 @@ export default function Login() {
                     <NsInput type='password' label='Senha' />
                     <NsButton title='Entrar' />
                     <NsButtonSignGoogle title='Entrar com Google' onClick={() => signIn()} />
-                    <Link href='/login/create-user'>Criar Usuário</Link>
                 </ContentLogin>
             </ContainerLogin>
 

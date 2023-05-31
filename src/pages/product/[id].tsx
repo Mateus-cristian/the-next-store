@@ -89,7 +89,7 @@ export default function Product({ product }: ProductsProps) {
 
                     <p>{product.description}</p>
 
-                    <NsButton disabled={inCheckout} handlerPoduct={() => addProductToCartCheckout({ product })} title="Adicionar ao carrinho" />
+                    <NsButton disabled={inCheckout} onClick={() => addProductToCartCheckout({ product })} title="Adicionar ao carrinho" />
 
                 </ProductDetails>
             </ProductContainer>
